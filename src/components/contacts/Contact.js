@@ -7,50 +7,71 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { IconButton } from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { useHistory } from "react-router-dom";
+import { deleteContact } from '../../container/actions/ContactAction';
 const Contact = () => {
   const useStyles = makeStyles({
     table: {
       minWidth: 650,
       marginTop: "5rem",
     },
+    header: {
+      backgroundColor: "#3f51b5",
+    },
+    heading: {
+      color: "white",
+    },
   });
   const classes = useStyles();
-  const contactState = useSelector((state) => {
-    console.log(state);
-  return  state.contact
-  });
-  console.log(contactState);
-  // if(contacts.length===0) {
-  //   return(
-  //     <h5>No contacts to be displayed</h5>
-  //   )
-  // }
-  // else {
-  //   return (
-  //     <TableContainer component={Paper}>
-  //     <Table aria-label="simple table" className={classes.table}>
-  //       <TableHead>
-  //         <TableRow>
-  //           <TableCell>Name</TableCell>
-  //           <TableCell>Contact Number</TableCell>
-  //           <TableCell>Email ID</TableCell>
-  //           <TableCell>Actions</TableCell>
-  //         </TableRow>
-  //       </TableHead>
-  //       <TableBody>
-  //         <TableRow>
-  //           <TableCell>Ankit Das</TableCell>
-  //           <TableCell>7384262730</TableCell>
-  //           <TableCell>ankitdas0812@gmail.com</TableCell>
-  //           <TableCell>Ankit Das</TableCell>
-  //         </TableRow>
-  //       </TableBody>
-  //     </Table>
-  //   </TableContainer>
-  //   )
-  // }
-  return <h5>Hello</h5>;
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const contactState = useSelector((state) => state.contact);
+  console.log(contactState.contacts);
+  if (contactState.contacts.length === 0) {
+    return <h3>No contacts to be displayed</h3>;
+  } else {
+    return (
+      <TableContainer component={Paper}>
+        <Table aria-label="simple table" className={classes.table}>
+          <TableHead className={classes.header}>
+            <TableRow>
+              <TableCell className={classes.heading}>Name</TableCell>
+              <TableCell className={classes.heading}>Contact Number</TableCell>
+              <TableCell className={classes.heading}>Email ID</TableCell>
+              <TableCell className={classes.heading}>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {contactState.contacts.map((value, key) => (
+              <TableRow key={key}>
+                <TableCell>{value.name}</TableCell>
+                <TableCell>{value.phoneNumber}</TableCell>
+                <TableCell>{value.email}</TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => {
+                      history.push(`/contacts/edit/${value.id}`);
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton onClick={() =>{
+                    dispatch(deleteContact(value.id));
+                  }}>
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
 };
 
 export default Contact;

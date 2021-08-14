@@ -5,6 +5,7 @@ import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Logo from "../assets/contact-book.png";
 import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
 const NavBar = () => {
   const useStyles = makeStyles((theme) => ({
     logo: {
@@ -20,6 +21,10 @@ const NavBar = () => {
     },
   }));
   const classes = useStyles();
+  const history = useHistory();
+  const handleClick = () => {
+    history.push('/addContact');
+  };
   return (
     <div className={classes.root}>
       <AppBar position="static" className={classes.appBar}>
@@ -28,7 +33,9 @@ const NavBar = () => {
           <Typography variant="h5" className={classes.text}>
             Contact Book
           </Typography>
-          <Button color="inherit">Add Contact</Button>
+          <Button color="inherit" onClick={handleClick}>
+            Add Contact
+          </Button>
         </Toolbar>
       </AppBar>
     </div>
